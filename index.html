@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Şarkı Dinleme Sitesi</title>
+  <style>
+    #controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Şarkı Dinle</h2>
+  <div id="player"></div>
+  <div id="controls">
+    <button id="playBtn">Dinle</button>
+    <button id="pauseBtn">Durdur</button>
+    <button id="loopBtn">Döngü: Kapalı</button>
+  </div>
+
+  <script>
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    var isLooping = false;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '0', // Videoyu gizliyoruz
+        width: '0',
+        videoId: 'XOD_0x6Re6o',
+        events: {
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (isLooping && event.data === YT.PlayerState.ENDED) {
+        player.seekTo(0);
+        player.playVideo();
+      }
+    }
+
+    document.getElementById('playBtn').onclick = function() {
+      player.playVideo();
+    };
+
+    document.getElementById('pauseBtn').onclick = function() {
+      player.pauseVideo();
+    };
+
+    document.getElementById('loopBtn').onclick = function() {
+      isLooping = !isLooping;
+      this.textContent = 'Döngü: ' + (isLooping ? 'Açık' : 'Kapalı');
+    };
+  </script>
+</body>
+</html>
