@@ -4,20 +4,35 @@
   <meta charset="UTF-8">
   <title>Şarkı Dinleme Sitesi</title>
   <style>
-    #controls {
+    .controls {
       display: flex;
       gap: 10px;
       margin-top: 15px;
+    }
+    .player-container {
+      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
   <h2>Şarkı Dinle</h2>
-  <div id="player"></div>
-  <div id="controls">
-    <button id="playBtn">Dinle</button>
-    <button id="pauseBtn">Durdur</button>
-    <button id="loopBtn">Döngü: Kapalı</button>
+  <div class="player-container">
+    <div id="player1"></div>
+    <div class="controls">
+      <button id="playBtn1">Dinle</button>
+      <button id="pauseBtn1">Durdur</button>
+      <button id="loopBtn1">Döngü: Kapalı</button>
+    </div>
+  </div>
+
+  <h2>Şarkı Çalar (2)</h2>
+  <div class="player-container">
+    <div id="player2"></div>
+    <div class="controls">
+      <button id="playBtn2">Dinle</button>
+      <button id="pauseBtn2">Durdur</button>
+      <button id="loopBtn2">Döngü: Kapalı</button>
+    </div>
   </div>
 
   <script>
@@ -26,38 +41,66 @@
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    var player;
-    var isLooping = false;
+    var player1, player2;
+    var isLooping1 = false;
+    var isLooping2 = false;
 
     function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '0', // Videoyu gizliyoruz
+      player1 = new YT.Player('player1', {
+        height: '0',
         width: '0',
         videoId: 'XOD_0x6Re6o',
         events: {
-          'onStateChange': onPlayerStateChange
+          'onStateChange': onPlayerStateChange1
+        }
+      });
+
+      player2 = new YT.Player('player2', {
+        height: '0',
+        width: '0',
+        videoId: 'nZrI4BiT8lo',
+        events: {
+          'onStateChange': onPlayerStateChange2
         }
       });
     }
 
-    function onPlayerStateChange(event) {
-      if (isLooping && event.data === YT.PlayerState.ENDED) {
-        player.seekTo(0);
-        player.playVideo();
+    function onPlayerStateChange1(event) {
+      if (isLooping1 && event.data === YT.PlayerState.ENDED) {
+        player1.seekTo(0);
+        player1.playVideo();
       }
     }
 
-    document.getElementById('playBtn').onclick = function() {
-      player.playVideo();
+    function onPlayerStateChange2(event) {
+      if (isLooping2 && event.data === YT.PlayerState.ENDED) {
+        player2.seekTo(0);
+        player2.playVideo();
+      }
+    }
+
+    // Player 1
+    document.getElementById('playBtn1').onclick = function() {
+      player1.playVideo();
+    };
+    document.getElementById('pauseBtn1').onclick = function() {
+      player1.pauseVideo();
+    };
+    document.getElementById('loopBtn1').onclick = function() {
+      isLooping1 = !isLooping1;
+      this.textContent = 'Döngü: ' + (isLooping1 ? 'Açık' : 'Kapalı');
     };
 
-    document.getElementById('pauseBtn').onclick = function() {
-      player.pauseVideo();
+    // Player 2
+    document.getElementById('playBtn2').onclick = function() {
+      player2.playVideo();
     };
-
-    document.getElementById('loopBtn').onclick = function() {
-      isLooping = !isLooping;
-      this.textContent = 'Döngü: ' + (isLooping ? 'Açık' : 'Kapalı');
+    document.getElementById('pauseBtn2').onclick = function() {
+      player2.pauseVideo();
+    };
+    document.getElementById('loopBtn2').onclick = function() {
+      isLooping2 = !isLooping2;
+      this.textContent = 'Döngü: ' + (isLooping2 ? 'Açık' : 'Kapalı');
     };
   </script>
 </body>
