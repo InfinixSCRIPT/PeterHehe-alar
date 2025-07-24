@@ -4,87 +4,60 @@
   <meta charset="UTF-8">
   <title>Şarkı Dinleme Sitesi</title>
   <style>
-    .controls {
+    #controls {
       display: flex;
       gap: 10px;
       margin-top: 15px;
-    }
-    .player-container {
-      margin-bottom: 30px;
     }
   </style>
 </head>
 <body>
   <h2>Şarkı Dinle</h2>
-  <div class="player-container">
-    <div id="player1"></div>
-    <div class="controls">
-      <button id="playBtn1">Dinle</button>
-      <button id="pauseBtn1">Durdur</button>
-      <button id="loopBtn1">Döngü: Kapalı</button>
-    </div>
-  </div>
-
-  <h2>Şarkı Çalar (2)</h2>
-  <div class="player-container">
-    <audio id="audio2" src="https://drive.google.com/uc?export=download&id=1nrHnHbZtTrmvabD0irLOX4lWNdsVSHf7"></audio>
-    <div class="controls">
-      <button id="playBtn2">Dinle</button>
-      <button id="pauseBtn2">Durdur</button>
-      <button id="loopBtn2">Döngü: Kapalı</button>
-    </div>
+  <div id="player"></div>
+  <div id="controls">
+    <button id="playBtn">Dinle</button>
+    <button id="pauseBtn">Durdur</button>
+    <button id="loopBtn">Döngü: Kapalı</button>
   </div>
 
   <script>
-    // YouTube Player 1
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    var player1;
-    var isLooping1 = false;
+    var player;
+    var isLooping = false;
 
     function onYouTubeIframeAPIReady() {
-      player1 = new YT.Player('player1', {
-        height: '0',
+      player = new YT.Player('player', {
+        height: '0', // Videoyu gizliyoruz
         width: '0',
         videoId: 'XOD_0x6Re6o',
         events: {
-          'onStateChange': onPlayerStateChange1
+          'onStateChange': onPlayerStateChange
         }
       });
     }
-    function onPlayerStateChange1(event) {
-      if (isLooping1 && event.data === YT.PlayerState.ENDED) {
-        player1.seekTo(0);
-        player1.playVideo();
+
+    function onPlayerStateChange(event) {
+      if (isLooping && event.data === YT.PlayerState.ENDED) {
+        player.seekTo(0);
+        player.playVideo();
       }
     }
-    document.getElementById('playBtn1').onclick = function() {
-      player1.playVideo();
-    };
-    document.getElementById('pauseBtn1').onclick = function() {
-      player1.pauseVideo();
-    };
-    document.getElementById('loopBtn1').onclick = function() {
-      isLooping1 = !isLooping1;
-      this.textContent = 'Döngü: ' + (isLooping1 ? 'Açık' : 'Kapalı');
+
+    document.getElementById('playBtn').onclick = function() {
+      player.playVideo();
     };
 
-    // Şarkı Çalar 2 (Google Drive mp4/mp3)
-    var audio2 = document.getElementById('audio2');
-    var isLooping2 = false;
-    document.getElementById('playBtn2').onclick = function() {
-      audio2.play();
+    document.getElementById('pauseBtn').onclick = function() {
+      player.pauseVideo();
     };
-    document.getElementById('pauseBtn2').onclick = function() {
-      audio2.pause();
-    };
-    document.getElementById('loopBtn2').onclick = function() {
-      isLooping2 = !isLooping2;
-      audio2.loop = isLooping2;
-      this.textContent = 'Döngü: ' + (isLooping2 ? 'Açık' : 'Kapalı');
+
+    document.getElementById('loopBtn').onclick = function() {
+      isLooping = !isLooping;
+      this.textContent = 'Döngü: ' + (isLooping ? 'Açık' : 'Kapalı');
     };
   </script>
 </body>
